@@ -1,4 +1,4 @@
-﻿namespace CommissionApp.Repositories
+﻿namespace CommissionApp.Audit
 {
     public interface IAudit
     {

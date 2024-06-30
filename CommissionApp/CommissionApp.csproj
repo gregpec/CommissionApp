@@ -7,12 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ChatGPT.Net" Version="2.0.0" />
-    <PackageReference Include="ChatGPTSharp" Version="2.0.4" />
-    <PackageReference Include="EntityFrameworkCore.BootKit" Version="8.4.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.6" />
-    <PackageReference Include="OpenAI.ChatGPT.AspNetCore" Version="3.3.0" />
+  <ItemGroup>  
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.6" /> 
     <PackageReference Include="System.Text.Json" Version="8.0.3" />
   </ItemGroup>
 

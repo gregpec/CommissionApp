@@ -8,22 +8,16 @@ namespace CommissionApp.Entities
 { 
     public class Customer : EntityBase
     {
+        public Customer(string firstname, string lastname, string email, string price)
+        {
+        }
         public Customer()  
         {
         }
-        public Customer(string firstname, string lastname, string email, string price) 
-        {
-
-        }
         public string? FirstName { get; set; }
-
         public string? LastName { get; set; }
-
         public bool? Email { get; set; }
-
         public float? Price { get; set; }
-
         public override string ToString() => $"Id: {Id}, FirstName: {FirstName}, LastName: {LastName}, Premium: {Email}, Price EUR: {Price}"; 
-
     }
 }

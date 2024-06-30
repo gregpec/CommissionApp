@@ -1,19 +1,11 @@
-﻿using CommissionApp.Entities;
-using System.Text.Json;
-
-namespace CommissionApp.Repositories;
+﻿namespace CommissionApp.Repositories;
+using CommissionApp.Entities;
 using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Index.HPRtree;
-
 public class SqlRepository<T> : IRepository<T> where T : class, IEntity, new()
 {
     private readonly DbSet<T> _dbSet;
     private readonly DbContext _dbContext;
-    //private readonly List<T> items = new();
     private readonly Action<T>? _itemAddedCallback;
-    //private const string? emptyFile = "List_Of_";
-   // public string JsonFile { get; set; }
-
     public SqlRepository(DbContext dbContext, Action<T>? itemAddedCallback= null)
     {
         _dbContext = dbContext;

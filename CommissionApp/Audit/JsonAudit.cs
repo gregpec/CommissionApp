@@ -1,8 +1,6 @@
-﻿namespace CommissionApp.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text.Json;
-public class JsonAuditRepository : IAudit
+﻿using System.Text.Json;
+namespace CommissionApp.Audit;
+public class JsonAudit : IAudit
 {
     public string Date { get; set; }
     public string Action { get; set; }
@@ -12,12 +10,11 @@ public class JsonAuditRepository : IAudit
     public List<string> auditEntries = new();
     private const string? auditFile = "AuditFile.json";
     private static string currentDate => DateTime.Now.ToString();
-
-    public JsonAuditRepository(string action, string itemData)
+    public JsonAudit(string action, string itemData)
     {
-        this.Date = currentDate;
-        this.Action = action;
-        this.ItemData = itemData;
+        Date = currentDate;
+        Action = action;
+        ItemData = itemData;
 
         if (File.Exists(auditFile))
         {
@@ -25,7 +22,6 @@ public class JsonAuditRepository : IAudit
             auditEntries = JsonSerializer.Deserialize<List<string>>(json)!;
         }
     }
-
     public List<string> ReadAuditFile()
     {
         if (!File.Exists(auditFile))
@@ -35,7 +31,6 @@ public class JsonAuditRepository : IAudit
 
         return auditEntries.ToList();
     }
-
     public void AddEntryToFile()
     {
         auditEntry = $"| Date: {Date} | Action: {Action} | Item data: {ItemData} |";
@@ -47,14 +42,12 @@ public class JsonAuditRepository : IAudit
             writer.WriteLine(auditEntry);
         }
     }
-
     public void SaveAuditFile()
     {
         string json = JsonSerializer.Serialize(auditEntries);
         File.WriteAllText(auditFile, json);
         TextPainting(ConsoleColor.DarkYellow, "AuditFile saved");
     }
-
     private static void TextPainting(ConsoleColor color, string text)
     {
         Console.ForegroundColor = color;

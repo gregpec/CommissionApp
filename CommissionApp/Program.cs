@@ -1,7 +1,7 @@
 ﻿using CommissionApp.Data;
 using CommissionApp.Entities;
 using CommissionApp.Repositories;
-using System.Diagnostics;
+using CommissionApp.Audit;
 
 var customerRepository = new SqlRepository<Customer>(new CommissionAppDbContext(), CustomerAdded);
 var carRepository = new SqlRepository<Car>(new CommissionAppDbContext(), CarAdded);
@@ -9,22 +9,18 @@ var carRepository = new SqlRepository<Car>(new CommissionAppDbContext(), CarAdde
 string action = "[System report: Error!]";
 string itemData = "[System report: Error!]";
 
-var auditRepository = new JsonAuditRepository($"{action}", $"{itemData}");
+var auditRepository = new JsonAudit($"{action}", $"{itemData}");
 
 customerRepository.ItemAdded += CustomerRepositoryOnItemAdded;
 customerRepository.ItemAdded += EventCustomerAdded;
 customerRepository.ItemRemoved += EventItemCustomerRemoved;
 customerRepository.AllRemoved += EventAllCustomersRemoved;
 customerRepository.NewAuditEntry += EventNewAuditEntry;
-
 carRepository.ItemAdded += CarRepositoryOnItemAdded;
 carRepository.ItemAdded += EventCarAdded;
 carRepository.ItemRemoved += EventItemCarRemoved;
 carRepository.AllRemoved += EventAllCarsRemoved;
 carRepository.NewAuditEntry += EventNewAuditCarEntry;
-
-
-
 static void CustomerRepositoryOnItemAdded(object? sender, Customer e)
 {
     TextColoring(ConsoleColor.Red, $"Event: Customer {e.FirstName} added from repository => {sender?.GetType().Name}!");
@@ -34,26 +30,22 @@ void EventCustomerAdded(object? sender, Customer item)
     action = auditRepository.Action = $"new {item.GetType().Name} added";
     itemData = auditRepository.ItemData = $"{item.GetType().Name}  Id: {item.Id}, Name and surname: {item.FirstName} {item.LastName}";
 }
-
 void EventItemCustomerRemoved(object? sender, Customer item)
 {
     TextColoring(ConsoleColor.Magenta, $"[{item.GetType().Name}] {item.FirstName} {item.LastName} with ID: {item.Id} was removed from the database.");
     action = auditRepository.Action = $"{item.GetType().Name} removed from the database";
     itemData = auditRepository.ItemData = $"[Delated] {item.GetType().Name} Id: {item.Id}, Name and surname: {item.FirstName} {item.LastName}";
 }
-
 void EventAllCustomersRemoved(object? sender, Customer item)
 {
     TextColoring(ConsoleColor.Red, $"[{item.GetType().Name}] {item.FirstName} with ID: {item.Id} was removed from the database.");
     action = auditRepository.Action = $"{item.GetType().Name} removed from the database";
     itemData = auditRepository.ItemData = $"[Delated] {item.GetType().Name} Id: {item.Id}, Car brand and model : {item.FirstName} {item.LastName} ";
 }
-
 void EventNewAuditEntry(object? sender, Customer item)
 {
     TextColoring(ConsoleColor.Blue, $"\nNew entry about {item.GetType().Name} in the AuditFile!");
 }
-
 void EventCarAdded(object? sender, Car item)
 {
     action = auditRepository.Action = $"new {item.GetType().Name} added";
@@ -71,7 +63,6 @@ void EventAllCarsRemoved(object? sender, Car item)
     action = auditRepository.Action = $"{item.GetType().Name} removed from the database";
     itemData = auditRepository.ItemData = $"[Delated] {item.GetType().Name} Id: {item.Id}, Car brand and model : {item.CarBrand} {item.CarModel} ";
 }
-
 
 static void CarRepositoryOnItemAdded(object? sender, Car e)
 {
@@ -112,7 +103,6 @@ do
     Console.WriteLine("10. Remove car by Id");
     Console.WriteLine("11. Display audit file");
     Console.WriteLine(" Press q to exit program: ");
-
     input = Console.ReadLine();
     Console.WriteLine();
 
@@ -176,7 +166,6 @@ do
             TextColoring(ConsoleColor.DarkGreen, "\n- - Removing an customers and cars - -");
             RemoveAllItem<Customer>(customerRepository);
             RemoveAllItem<Car>(carRepository);
-
             break;
         case "9":
             {
@@ -190,13 +179,11 @@ do
                 RemoveItemById<Car>(carRepository);
             }
             break;
-
         case "11":
             {
                 WriteAllFromAuditFileToConsole();
             }
             break;
-
         case "q":
             break;
         default:
@@ -247,7 +234,6 @@ bool AddCustomers(IRepository<Customer> customerRepository)
         return false;
     }
 }
-
 bool AddCars(IWriteRepository<Car> repository)
 {
     Console.WriteLine("\nAdding Car :");
@@ -259,18 +245,8 @@ bool AddCars(IWriteRepository<Car> repository)
     repository.Save();
     auditRepository.AddEntryToFile();
     auditRepository.SaveAuditFile();
-
     return true;
 }
-
-//static void WriteAllFromEntityListToConsole(IReadRepository<IEntity> repository)
-//{
-//    var items = repository.GetAll();
-//    foreach (var item in items)
-//    {
-//        Console.WriteLine(item);
-//    }
-//}
 static void WriteAllToConsole(IReadRepository<IEntity> repository)
 {
     var items = repository.GetAll();
@@ -295,7 +271,6 @@ void RemoveItemById<T>(IRepository<T> repository)
     where T : class, IEntity
 {
     bool isIdCorrect = true;
-
     do
     {
         Console.WriteLine($"\nEnter the ID of the person you want to remove from the database:\n(Press 'q' button + 'ENTER' button to quit and back to main menu)");
@@ -324,11 +299,9 @@ void RemoveItemById<T>(IRepository<T> repository)
         }
     } while (false);
 }
-
 void RemoveAllItem<T>(IRepository<T> repository)
     where T : class, IEntity
-{
-    
+{  
     do
     {
         Console.WriteLine($"\nEnter \"y\" to remove all {repository.GetType().Name} from the database:\n(Press 'q' button + 'ENTER' button to quit and back to main menu)");
@@ -355,7 +328,6 @@ void RemoveAllItem<T>(IRepository<T> repository)
         }
     } while (input!="q");
 }
-
 void WriteAllFromAuditFileToConsole()
 {
     var items = auditRepository.ReadAuditFile();
@@ -364,7 +336,6 @@ void WriteAllFromAuditFileToConsole()
         Console.WriteLine(item);
     }
 }
-
 static void TextColoring(ConsoleColor color, string text)
 {
     Console.ForegroundColor = color;

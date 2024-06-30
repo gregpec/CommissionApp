@@ -8,10 +8,10 @@ namespace CommissionApp.Entities
 {
     public class Car : EntityBase
     {
-        public Car()
+        public Car(string carbrand, string carmodel)
         {
         }
-        public Car(string carbrand, string carmodel)
+        public Car()
         {
         }
         public string? CarBrand { get; set; }
