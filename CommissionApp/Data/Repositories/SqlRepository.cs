@@ -1,12 +1,13 @@
-﻿namespace CommissionApp.Repositories;
-using CommissionApp.Entities;
+﻿namespace CommissionApp.Data.Repositories;
+
+using CommissionApp.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 public class SqlRepository<T> : IRepository<T> where T : class, IEntity, new()
 {
     private readonly DbSet<T> _dbSet;
     private readonly DbContext _dbContext;
     private readonly Action<T>? _itemAddedCallback;
-    public SqlRepository(DbContext dbContext, Action<T>? itemAddedCallback= null)
+    public SqlRepository(DbContext dbContext, Action<T>? itemAddedCallback = null)
     {
         _dbContext = dbContext;
         _dbSet = _dbContext.Set<T>();
@@ -38,7 +39,7 @@ public class SqlRepository<T> : IRepository<T> where T : class, IEntity, new()
         ItemRemoved?.Invoke(this, item);
         NewAuditEntry?.Invoke(this, item);
     }
-        public void RemoveAll()
+    public void RemoveAll()
     {
         var allEntities = _dbSet.ToList();
         _dbSet.RemoveRange(allEntities);

@@ -8,8 +8,24 @@
   </PropertyGroup>
 
   <ItemGroup>  
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.6" /> 
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.6" />  
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />  
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" /> 
     <PackageReference Include="System.Text.Json" Version="8.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\DataProviders\Extensions\" />
+    <Folder Include="Resources\Files\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\Files\Cars.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Files\Customers.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

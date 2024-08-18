@@ -1,4 +1,4 @@
-﻿namespace CommissionApp.Entities
+﻿namespace CommissionApp.Data.Entities
 {
     public abstract class EntityBase : IEntity
     {

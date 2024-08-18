@@ -1,6 +1,6 @@
-﻿using CommissionApp.Entities;
+﻿using CommissionApp.Data.Entities;
 
-namespace CommissionApp.Repositories
+namespace CommissionApp.Data.Repositories
 {
     public interface IWriteRepository<in T> where T : class, IEntity
     {
