@@ -3,32 +3,13 @@ using System.Text.Json;
 namespace CommissionApp.Audit;
 public class JsonAudit : IAudit
 {
-    //private readonly string _auditFile;
-
     public JsonAudit()
     {
-        //_auditFile = auditFile;
-
-
-
-        //if (File.Exists(auditFile))
-        //{
-        //    string json = File.ReadAllText(auditFile);
-        //    auditEntries = JsonSerializer.Deserialize<List<string>>(json)!;
-        //}
-
-
     }
     public string Date { get; set; }
     public string Action { get; set; }
     public string ItemData { get; set; }
     private string? auditEntry = null;
-
-
-
-
-
-
     public List<string> auditEntries = new();
     private const string? auditFile = "AuditFile.json";
     private static string currentDate => DateTime.Now.ToString();
@@ -44,22 +25,6 @@ public class JsonAudit : IAudit
             auditEntries = JsonSerializer.Deserialize<List<string>>(json)!;
         }
     }
-
-    //public JsonAudit(string auditFile, string action, string itemData)
-    //{
-    //    _auditFile = auditFile ?? "AuditFile.json";
-    //    Date = currentDate;
-    //    Action = action;
-    //    ItemData = itemData;
-
-    //    if (File.Exists(_auditFile))
-    //    {
-    //        string json = File.ReadAllText(_auditFile);
-    //        auditEntries = JsonSerializer.Deserialize<List<string>>(json)!;
-    //    }
-    //}
-
-
     public List<string> ReadAuditFile()
     {
         if (!File.Exists(auditFile))
