@@ -9,7 +9,6 @@ using CommissionApp.Components.CsvReader;
 using CommissionApp.Data.Entities;
 using CommissionApp.Data.Repositories;
 using CommissionApp.Components.DataProviders;
-
 public class App : IApp
 {
     private readonly IRepository<Customer> _customersRepository;
@@ -118,7 +117,8 @@ public class App : IApp
         string input;
         do
         {
-            Console.WriteLine("\n================MENU================");
+            TextColoring(ConsoleColor.Green, "Welcome to Aplication Commission App");
+            Console.WriteLine("\n================= MENU Data Cars and Customers ================");
             Console.WriteLine("1. Add customer");
             Console.WriteLine("2. Add car");
             Console.WriteLine("3. Display all customers");
@@ -130,8 +130,12 @@ public class App : IApp
             Console.WriteLine("9. Remove customer by Id");
             Console.WriteLine("10. Remove car by Id");
             Console.WriteLine("11. Display audit file");
-            Console.WriteLine("12. Read Data from file cars.csv ");
-            Console.WriteLine("13. Read Data from file customers.csv ");
+            Console.WriteLine("12. Read data from file cars.csv ");
+            Console.WriteLine("12.1 to order data cars by prices ");
+            Console.WriteLine("12.2 to distinct all data cars by model");
+            Console.WriteLine("12.3 to get minimum data car's price of all cars");
+            Console.WriteLine("12.4 to create file cars.xmL");
+            Console.WriteLine("13. Read data from file customers.csv");
             Console.WriteLine(" Press q to exit program: ");
             input = Console.ReadLine();
             Console.WriteLine();
@@ -222,16 +226,17 @@ public class App : IApp
                         do
                         {
                             Console.WriteLine();
-                            Console.WriteLine("What yopu want to do? q-quit ");
-                            Console.WriteLine("14 Order By Prices ");
-                            Console.WriteLine("15 Distinct All Car Model ");
-                            Console.WriteLine("16 Get Minimum Price Of All Cars  ");
-                            Console.WriteLine("17 CreateXmL ");
+                            Console.WriteLine("\n================ Data Cars ================");
+                            Console.WriteLine("1 to order data cars by prices ");
+                            Console.WriteLine("2 to distinct all cars by model ");
+                            Console.WriteLine("3 to get minimum price of all cars  ");
+                            Console.WriteLine("4 to create file cars.XmL ");
+                            Console.WriteLine(" Press q to exit program: ");
                             submenu = Console.ReadLine();
 
                             switch (submenu)
                             {
-                                case "14":
+                                case "12.1":
                                     {
                                         Console.WriteLine("OrderByPrice");
 
@@ -241,10 +246,8 @@ public class App : IApp
                                         }
                                     }
                                     break;
-
-                                case "15":
+                                case "2":
                                     {
-
                                         Console.WriteLine("DistinctAllCarModel ");
                                         foreach (var item in _carsProvider.DistinctAllCarModel())
                                         {
@@ -252,19 +255,18 @@ public class App : IApp
                                         }
                                     }
                                     break;
-                                case "16":
+                                case "3":
                                     {
                                         Console.WriteLine();
-                                        Console.WriteLine($"GetMinimumPriceOfAllCars {_carsProvider.GetMinimumPriceOfAllCars()}, ");
-                                        Console.WriteLine($"GetCarWithMinimumPrice{_carsProvider.GetCarWithMinimumPrice()},");
+                                        Console.WriteLine($"Minimum Price Of All Cars: {_carsProvider.GetMinimumPriceOfAllCars()}, ");
+                                        Console.WriteLine($"Car With Minimum Price:{_carsProvider.GetCarWithMinimumPrice()},");
                                     }
                                     break;
-                                case "17":
+                                case "4":
                                     {
                                         Console.WriteLine();
                                         Console.WriteLine("CreateXmL  ");
                                         CreateXmL();
-                                        // QueryXml1();
                                     }
                                     break;
                                 default:
@@ -321,7 +323,7 @@ public class App : IApp
                     price = Console.ReadLine();
                 }
 
-                customerRepository.Add(new Customer { FirstName = firstname, LastName = lastname, Email = bool.Parse(email), Price = decimal.Parse(price) });
+                customerRepository.Add(new Customer { FirstName = firstname, LastName = lastname, Email = bool.Parse(email), Price = decimal.Parse(price)});
                 customerRepository.Save();
                 auditRepository.AddEntryToFile();
                 auditRepository.SaveAuditFile();
@@ -449,9 +451,7 @@ public class App : IApp
             Console.ResetColor();
 
         }
-        Console.WriteLine("I'm here in Run() method");
     }
-
     void LoadCarFromFileToConsole(IRepository<Car> carRepository)
     {
         string file = "Resources\\Files\\Cars.csv";
@@ -500,7 +500,6 @@ public class App : IApp
     public void CreateXmL()
     {
         var records = _csvReader.ProcessCars("Resources\\Files\\Cars.csv");
-        //var customers = _csvReader.ProcessCustomers("Resources\\Files\\Customers.csv");
         var document = new XDocument();
         var cars = new XElement("Cars", records
             .Select(x =>
@@ -510,20 +509,6 @@ public class App : IApp
                   new XAttribute("CarPrice", x.CarPrice)))); 
         document.Add(cars);
         document.Save("Cars.xml");
-    }
-
-    private static void QueryXml1()
-    {
-        var document = XDocument.Load("Cars.xml");
-        var names = document
-            .Element("Cars")
-            .Elements("Car")
-            .Where(x => x.Attribute("CarModel").Value == "Ferrari")
-            .Select(x => x.Attribute("Ferrari").Value);
-        foreach (var name in names)
-        {
-            Console.WriteLine(name);
-        }
     }
 }
 

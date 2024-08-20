@@ -5,7 +5,7 @@ namespace CommissionApp.Components.CsvReader.Extensions
 {
     public static class CarExtensions
     {
-        public static IEnumerable<Car> ToCar(this IEnumerable<string> source) //stworzenie samochodu na podstawie jednego source'a
+        public static IEnumerable<Car> ToCar(this IEnumerable<string> source) 
         {
             foreach (var line in source)
             {

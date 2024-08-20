@@ -20,19 +20,6 @@ namespace CommissionApp.Data.Entities
         public string? CarModel { get; set; }
         public decimal CarPrice { get; set; }
         public override string ToString() => $"Id: {Id}, brand: {CarBrand}, model: {CarModel}, price {CarPrice}";
-
-        //    #region ToString Override
-        //    public override string ToString()
-        //    {
-        //        StringBuilder sb = new(1024);
-
-        //        sb.AppendLine($"{CarBrand} ID: {Id}");
-        //        sb.AppendLine($"     {CarModel}   ");
-        //        sb.AppendLine($"    Price: {CarPrice:p}");                                                      
-              //        return sb.ToString();
-        //    }
-        //}
-        //#endregion
     }
 }
 
