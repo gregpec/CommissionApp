@@ -6,10 +6,15 @@
     using System.Security.Principal;
     using Microsoft.EntityFrameworkCore;
     using CommissionApp.Data.Entities;
+    
+    using System.Collections.Generic;
+    using CommissionApp.ImportCsvToSqlAuditTxtFile;
 
     public class ListRepository<T> : IRepository<T> where T : class, IEntity, new()
     {
         private readonly List<T> _items = new();
+        public event EventHandler<T>? ItemAdded;
+        public event EventHandler<T>? ItemRemoved;
 
         public void RemoveAll()
         {
@@ -24,6 +29,9 @@
         {
             // return default(T);
             return _items.Single(item => item.Id == id); // wyrazenie lambda z parametrem item i zapytaniem item.Id = id  /////// () => operator
+
+
+
         }
 
         public void Add(T item)
@@ -31,6 +39,7 @@
             // item.Id = _items.Count + 1;  // ID ograniczenia
             item.Id = _items.Count + 1;  // ID ograniczenia nieokreslony Is z innej klasy albo interdesu  
             _items.Add(item);
+            OnItemAdded(item);
 
             // w tym miejscu zapisujemy fane do listy
         }
@@ -38,6 +47,7 @@
         public void Remove(T item)
         {
             _items.Remove(item);
+          // OnItemRemoved(item);
         }
 
 
@@ -50,6 +60,16 @@
             // wyrzucenie drukowania wartosci na ekran w listach tego nie potrzebujemy
             // zapisujemy w Add
         }
+
+        protected virtual void OnItemAdded(T item)
+        {
+            ItemAdded?.Invoke(this, item);
+        }
+
+        //protected virtual void OnItemRemoved(T item)
+        //{
+        //    ItemRemoved?.Invoke(this, item);
+        //}
     }
 
 
