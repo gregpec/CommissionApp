@@ -16,9 +16,9 @@ services.AddSingleton<IRepository<Car>, ListRepository<Car>>();
 services.AddSingleton<ICarsProvider, CarsProvider>();
 services.AddSingleton<ICsvReader, CsvReader>();
 services.AddSingleton<IJsonFileService<Customer>>(new JsonFileService<Customer>("Resources\\Files\\Customers.json"));
-services.AddSingleton<IJsonFileService<Car>>(new JsonFileService<Car>("Resources\\Files\\Car.json"));
-services.AddSingleton<IImportCsvToSqlAuditTxtFile<Customer>>(new ImportCsvToSqlAuditTxtFile<Customer>("Resources\\Files\\Custom.txt"));
-services.AddSingleton<IImportCsvToSqlAuditTxtFile<Car>>(new ImportCsvToSqlAuditTxtFile<Car>("Resources\\Files\\Ca.txt"));
+services.AddSingleton<IJsonFileService<Car>>(new JsonFileService<Car>("Resources\\Files\\Cars.json"));
+services.AddSingleton<IImportCsvToSqlAuditTxtFile<Customer>>(new ImportCsvToSqlAuditTxtFile<Customer>("Resources\\Files\\Customers.txt"));
+services.AddSingleton<IImportCsvToSqlAuditTxtFile<Car>>(new ImportCsvToSqlAuditTxtFile<Car>("Resources\\Files\\Cars.txt"));
 
 services.AddTransient<IAudit>(provider =>
 {
