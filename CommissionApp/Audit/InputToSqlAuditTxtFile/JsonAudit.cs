@@ -11,7 +11,7 @@ public class JsonAudit : IAudit
     public string ItemData { get; set; }
     private string? auditEntry = null;
     public List<string> auditEntries = new();
-    private const string? auditFile = "AuditFile.txc";
+    private const string? auditFile = "AuditFile.json";
     private static string currentDate => DateTime.Now.ToString();
     public JsonAudit(string action, string itemData)
     {
