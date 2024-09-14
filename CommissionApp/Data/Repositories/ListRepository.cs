@@ -1,14 +1,8 @@
 ﻿namespace CommissionApp.Data.Repositories
-
 {
-    using Microsoft.Extensions.DependencyInjection;
-    using CommissionApp.Data;
-    using System.Security.Principal;
-    using Microsoft.EntityFrameworkCore;
     using CommissionApp.Data.Entities;
-    
     using System.Collections.Generic;
-    using CommissionApp.ImportCsvToSqlAuditTxtFile;
+    
 
     public class ListRepository<T> : IRepository<T> where T : class, IEntity, new()
     {

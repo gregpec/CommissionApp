@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-
-namespace CommissionApp.ImportCsvToSqlAuditTxtFile
+﻿namespace CommissionApp.Audit.ImportCsvToSqlAuditTxtFile
 {
     public class ImportCsvToSqlAuditTxtFile<T> : IImportCsvToSqlAuditTxtFile<T>
     {
@@ -29,7 +22,7 @@ namespace CommissionApp.ImportCsvToSqlAuditTxtFile
                 Console.WriteLine($"Failed to log audit entry: {ex.Message}");
             }
         }
-    }      
+    }
 }
 
 
@@ -58,5 +51,5 @@ namespace CommissionApp.ImportCsvToSqlAuditTxtFile
 
 
 
-    
+
 

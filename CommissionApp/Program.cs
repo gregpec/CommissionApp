@@ -1,13 +1,12 @@
-﻿using CommissionApp.Audit;
-using CommissionApp;
+﻿using CommissionApp;
 using Microsoft.Extensions.DependencyInjection;
 using CommissionApp.Components.CsvReader;
 using CommissionApp.Data.Entities;
 using CommissionApp.Data.Repositories;
 using CommissionApp.Components.DataProviders;
-using System;
-using CommissionApp.Services;
-using CommissionApp.ImportCsvToSqlAuditTxtFile;
+using CommissionApp.Audit.ImportCsvToSqlAuditTxtFile;
+using CommissionApp.Audit.InputToSqlAuditTxtFile;
+using CommissionApp.JsonFile.ImportCsvToSqlExportJsonFile;
 
 var services = new ServiceCollection();
 
@@ -20,7 +19,6 @@ services.AddSingleton<IJsonFileService<Customer>>(new JsonFileService<Customer>(
 services.AddSingleton<IJsonFileService<Car>>(new JsonFileService<Car>("Resources\\Files\\Car.json"));
 services.AddSingleton<IImportCsvToSqlAuditTxtFile<Customer>>(new ImportCsvToSqlAuditTxtFile<Customer>("Resources\\Files\\Custom.txt"));
 services.AddSingleton<IImportCsvToSqlAuditTxtFile<Car>>(new ImportCsvToSqlAuditTxtFile<Car>("Resources\\Files\\Ca.txt"));
-
 
 services.AddTransient<IAudit>(provider =>
 {

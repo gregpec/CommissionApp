@@ -1,4 +1,4 @@
-﻿namespace CommissionApp.Audit
+﻿namespace CommissionApp.Audit.InputToSqlAuditTxtFile
 {
     public interface IAudit
     {

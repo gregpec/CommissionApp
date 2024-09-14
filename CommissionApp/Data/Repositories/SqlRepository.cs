@@ -1,8 +1,7 @@
 ﻿namespace CommissionApp.Data.Repositories;
-
 using CommissionApp.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using CommissionApp.ImportCsvToSqlAuditTxtFile;
+
 public class SqlRepository<T> : IRepository<T> where T : class, IEntity, new()
 {
     private readonly DbSet<T> _dbSet;
@@ -17,7 +16,6 @@ public class SqlRepository<T> : IRepository<T> where T : class, IEntity, new()
 
     public event EventHandler<T>? ItemAdded;
     public event EventHandler<T>? ItemRemoved;
-   // public event EventHandler<T>? AllRemoved;
     public event EventHandler<T>? NewAuditEntry;
     public IEnumerable<T> GetAll()
     {
@@ -39,30 +37,17 @@ public class SqlRepository<T> : IRepository<T> where T : class, IEntity, new()
         _dbSet.Remove(item);
         ItemRemoved?.Invoke(this, item);
         NewAuditEntry?.Invoke(this, item);
-        //OnItemRemoved(item);
     }
     public void RemoveAll()
     {
         var allEntities = _dbSet.ToList();
-       // _dbSet.RemoveRange(allEntities);
         foreach (var item in allEntities)
         {
             Remove(item);
-            //_dbSet.Remove(item);
-            //ItemRemoved?.Invoke(this, item);
-            //NewAuditEntry?.Invoke(this, item);
-           // 
-            // Save();
-            // OnItemRemoved(item);
         }
     }
     public void Save()
     {
         _dbContext.SaveChanges();
     }
-    //protected virtual void OnItemRemoved(T item)
-    //{
-    //    ItemRemoved?.Invoke(this, item);
-    //}
-
 }

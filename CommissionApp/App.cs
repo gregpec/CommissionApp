@@ -1,21 +1,16 @@
-﻿using CommissionApp.ImportCsvToSqlAuditTxtFile;
-
-namespace CommissionApp;
+﻿namespace CommissionApp;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using CommissionApp.Audit;
 using CommissionApp.Data;
 using CommissionApp.Components.CsvReader;
 using CommissionApp.Data.Entities;
 using CommissionApp.Data.Repositories;
 using CommissionApp.Components.DataProviders;
-using CommissionApp.Services;
-using CommissionApp.ImportCsvToSqlAuditTxtFile;
-using CommissionApp.Data.Repositories;
-using CommissionApp.Data.Repositories;
-using System.Security.Cryptography.X509Certificates;
+using CommissionApp.Audit.ImportCsvToSqlAuditTxtFile;
+using CommissionApp.Audit.InputToSqlAuditTxtFile;
+using CommissionApp.JsonFile.ImportCsvToSqlExportJsonFile;
 
 public class App : IApp
 {
@@ -49,7 +44,6 @@ public class App : IApp
         _customerImportCsvToSqlAuditTxtFile = customerImportCsvToSqlAuditTxtFile;
         _carImportCsvToSqlAuditTxtFile = carImportCsvToSqlAuditTxtFile;
 
-
         _customersRepository.ItemAdded += (sender, customer) =>
         {
             _customerImportCsvToSqlAuditTxtFile.LogAudit("Added Customer", customer);
@@ -61,96 +55,9 @@ public class App : IApp
             _carImportCsvToSqlAuditTxtFile.LogAudit("Added Car", car);
             Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Added Car - {car.CarModel}");
         };
-
-        //_customersRepository.ItemRemoved += (sender, customer) =>
-        //{
-        //    _customerImportCsvToSqlAuditTxtFile.LogAudit("Removed Customer", customer);
-        //    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Removed Customer - {customer.FirstName}");
-        //};
-
-        //_carsRepository.ItemRemoved += (sender, car) =>
-        //{
-        //    _carImportCsvToSqlAuditTxtFile.LogAudit("Removed Car", car);
-        //    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Removed Car - {car.CarModel}");
-        //};
-
-
     }
     public void Run()
-    {
-        
-          
-
-            // DisplayMovieInformation();
-            //  DisplaySeriesInformation();
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-
-
-        {
-            new Movie { Title = "The Green Mile", Type = "Drama" },
-            new Movie { Title = "Forrest Gump", Type = "Comedy" },
-            new Movie { Title = "Joker", Type = "Thriller" },
-            new Movie { Title = "Avatar", Type = "Fantasy" },
-            new Movie { Title = "The Godfather", Type = "Drama" },
-            new Movie { Title = "Kac Vegas", Type = "Comedy" },
-            new Movie { Title = "Anabelle", Type = "Horror" },
-            new Movie { Title = "Anyone but you", Type = "Romantic comedy" }
-        };
-
-        var series = new List<Series>
-        {
-            new Series { Title = "Breaking Bad", Type = "Crime" },
-            new Series { Title = "The Crown", Type = "Historical" },
-            new Series { Title = "The Watcher", Type = "Horror" },
-            new Series { Title = "Forst", Type = "Crime" },
-            new Series { Title = "1670", Type = "Comedy" },
-            new Series { Title = "New Amsterdam", Type = "Drama" }
-        };
-
-        foreach (var movie in movies)
-        {
-            movieRepo.Add(movie);
-            _movieAuditService.LogAudit("Initial Add Movie", movie);
-        }
-
-        foreach (var serie in series)
-        {
-            seriesRepo.Add(serie);
-            _seriesAuditService.LogAudit("Initial Add Series", serie);
-        }
-
-        movieRepo.Save();
-        seriesRepo.Save();
-    }
-
-        */
-
-
-
-
-
-
-
-
-
-
+    {     
         var customerRepository = new SqlRepository<Customer>(new CommissionAppDbContext(), CustomerAdded);
         var carRepository = new SqlRepository<Car>(new CommissionAppDbContext(), CarAdded);
 
@@ -158,20 +65,15 @@ public class App : IApp
         string itemData = "[System report: Error!]";
         string auditFile = "AuditFile.json";
         var auditRepository = new JsonAudit($"{action}", $"{itemData}");
-
         customerRepository.ItemAdded += CustomerRepositoryOnItemAdded;
         customerRepository.ItemAdded += EventCustomerAdded;
-        customerRepository.ItemRemoved += EventItemCustomerRemoved;
-        //customerRepository.AllRemoved += EventAllCustomersRemoved;
+        customerRepository.ItemRemoved += EventItemCustomerRemoved; 
         customerRepository.NewAuditEntry += EventNewAuditEntry;
         carRepository.ItemAdded += CarRepositoryOnItemAdded;
         carRepository.ItemAdded += EventCarAdded;
         carRepository.ItemRemoved += EventItemCarRemoved;
-        //carRepository.AllRemoved += EventAllCarsRemoved;
         carRepository.NewAuditEntry += EventNewAuditCarEntry;
-       // EventItemCarRemoved
-
-
+     
         static void CustomerRepositoryOnItemAdded(object? sender, Customer e)
         {
             TextColoring(ConsoleColor.Red, $"Event: Customer {e.FirstName} added from repository => {sender?.GetType().Name}!");
@@ -180,14 +82,6 @@ public class App : IApp
         {
             action = auditRepository.Action = $"new {item.GetType().Name} added";
             itemData = auditRepository.ItemData = $"{item.GetType().Name}  Id: {item.Id}, Name and surname: {item.FirstName} {item.LastName}";
-
-            ////////////////////////
-            //_customersRepository.ItemAdded += (sender, customer) =>
-            //{
-            //    _customerImportCsvToSqlAuditTxtFile.LogAudit("Added Movie", customer);
-            //    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Added.Customer - {customer.FirstName}");
-            //};
-            ///////////////////////////////////
 
         }
         void EventItemCustomerRemoved(object? sender, Customer item)
@@ -209,9 +103,7 @@ public class App : IApp
         void EventCarAdded(object? sender, Car item)
         {
             action = auditRepository.Action = $"new {item.GetType().Name} added";
-            itemData = auditRepository.ItemData = $"{item.GetType().Name}  Id: {item.Id}, Car brand and model : {item.CarBrand} {item.CarModel} ";
-          
-
+            itemData = auditRepository.ItemData = $"{item.GetType().Name}  Id: {item.Id}, Car brand and model : {item.CarBrand} {item.CarModel} ";    
         }
         void EventItemCarRemoved(object? sender, Car item)
         {
@@ -247,8 +139,6 @@ public class App : IApp
             TextColoring(ConsoleColor.Red, $"Action: {item.CarBrand}, Added!");
         }
 
-        ///
-
         string input;
         do
         {
@@ -273,7 +163,6 @@ public class App : IApp
             Console.WriteLine("13. Import data to Sql from file customers.csv");
             Console.WriteLine("14. Create file customers.json, car.json");
             Console.WriteLine("15. Load data from files json");
-
             Console.WriteLine(" Press q to exit program: ");
             input = Console.ReadLine();
             Console.WriteLine();
@@ -440,9 +329,6 @@ public class App : IApp
 
                     }
                     break;
-
-
-
                 case "q":
                     break;
                 default:
@@ -615,8 +501,6 @@ public class App : IApp
     {
         string file = "Resources\\Files\\Cars.csv";
         var records = _csvReader.ProcessCars("Resources\\Files\\Cars.csv");
-      //  var customer = _csvReader.ProcessCustomers("Resources\\Files\\Customers.csv");
-
         List<Car> cars = _csvReader.ProcessCars(file);
         foreach (var car in cars)
         {
@@ -697,125 +581,48 @@ public class App : IApp
         if (!_customersRepository.GetAll().Any() && !_carsRepository.GetAll().Any())
         {
             ExportToJsonFileSqlRepo(_customersRepository, _carsRepository);
-         //   ExportToJsonFileSqlRepo(customersRepository, carsRepository);
         }
-
         _customersRepository.Save();
         _carsRepository.Save();
     }
-
-
     void ExportToJsonFileSqlRepo(IRepository<Customer> customerRepository, IRepository<Car> carRepository)
     {
-        //var customer = new List<Customer>
-
-
-
         string filePath = "Resources\\Files\\Customers.csv";
-
-        var custom = _csvReader.ProcessCustomers("Resources\\Files\\Customers.csv");
-
+        var customRecords = _csvReader.ProcessCustomers("Resources\\Files\\Customers.csv");
         List<Customer> customers = _csvReader.ProcessCustomers(filePath);
-        foreach (var customer in custom)
+        foreach (var customer in customRecords)
         {
-
-
-
-
-            //wrzutaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-            //_customersRepository.ItemAdded += (sender, customer) =>
-            //{
-            //    _customerImportCsvToSqlAuditTxtFile.LogAudit("Added Movie", customer);
-            //    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Added.Customer - {customer.FirstName}");
-            //};
-
-            //_carsRepository.ItemAdded += (sender, car) =>
-            //{
-            //    _carImportCsvToSqlAuditTxtFile.LogAudit("Added Series", car);
-            //    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Added Series - {car.CarModel}");
-            //};
-
-            //_customersRepository.ItemRemoved += (sender, customer) =>
-            //{
-            //    _customerImportCsvToSqlAuditTxtFile.LogAudit("Removed Movie", customer);
-            //    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Removed Movie - {customer.FirstName}");
-            //};
-
-            //_carsRepository.ItemRemoved += (sender, car) =>
-            //{
-            //    _carImportCsvToSqlAuditTxtFile.LogAudit("Removed Series", car);
-            //    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Removed Series - {car.CarModel}");
-            //};
-
-            // wrzutaaaaaaaaaaaaaaaaaaaaaaaaaa
-
             _auditRepository.AddEntryToFile();
             _auditRepository.SaveAuditFile();
-
-
-
-
-            //  Console.WriteLine($"ID: {customer.Id}, FirstName: {customer.FirstName}, LastName: {customer.LastName}, Premium: {customer.Email}, Price: {customer.Price:C}");
             _customersRepository.Add(customer);
             _customersRepository.Save();
             customerRepository.Add(new Customer { FirstName = customer.FirstName, LastName = customer.LastName, Email = customer.Email, Price = customer.Price });
              customerRepository.Save();
             _jsonCustomerService.SaveToFile(_customersRepository.GetAll());
-          
-
-
-
-
-
         }
-
-        foreach (var customer in custom)
+        foreach (var customer in customRecords)
         {
             Console.WriteLine($"Wypisanie lini{customer}");
         }
-
-       
-      //  _jsonSeriesService.SaveToFile(_seriesRepo.GetAll());
-
-
         string file = "Resources\\Files\\Cars.csv";
-
         var records = _csvReader.ProcessCars("Resources\\Files\\Cars.csv");
 
         List<Car> cars = _csvReader.ProcessCars(file);
         foreach (var car in records)
         {
             _carsRepository.Add(car);
-            _carsRepository.Save();
-            // Console.WriteLine($"ID: {car.Id}, Brand: {car.CarBrand}, Model: {car.CarModel}, Price: {car.CarPrice:C}");
             carRepository.Add(new Car { CarBrand = car.CarBrand, CarModel = car.CarModel, CarPrice = car.CarPrice });
-            //carRepository.Add(car);
             carRepository.Save();
-
-           
-
-            _jsonCarService.SaveToFile(_carsRepository.GetAll());
-           
-
-
             _auditRepository.AddEntryToFile();
             _auditRepository.SaveAuditFile();
+            _jsonCarService.SaveToFile(_carsRepository.GetAll());
+            _carsRepository.Save();       
         }
+      
         foreach (var car in records)
-        {
-            //carRepository.Add(car);
+        {          
             Console.WriteLine($"{car}");
         }
-
-
-
-
-
-
-
-
-
-
     }
 }
 
