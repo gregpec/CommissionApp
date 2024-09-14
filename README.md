@@ -13,7 +13,9 @@ The following files are created from the Customers.csv and Cars.csv files:
 - Cars.json
 - Customers.txt
 - Cars.txt
+
 When we enter data from the console an audit file is created:
 - AuditFile.txt
+
 We can also export Cars.csv data to xml and file is created:
 - Cars.xml
